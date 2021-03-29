@@ -40,6 +40,8 @@ class Prisma(Gtk.Window):
     forward_button = Gtk.ToolButton()
     reload_button = Gtk.ToolButton()
 
+    security = Gtk.Label()
+
     img = Gtk.Image()
 
     def __init__(self):
@@ -50,6 +52,12 @@ class Prisma(Gtk.Window):
         self.header_bar.set_show_close_button(True)
 
         self.window.set_size_request(900, 600)
+
+        if 'https' in self.default_url:
+            self.security.set_label('🔒  |  Home')
+        else:
+            print('adasd')
+            self.security.set_label('🔓  |  Home')
 
         self.initialize_widgets()
         self.connect_signals()
@@ -106,6 +114,7 @@ class Prisma(Gtk.Window):
         box.add(self.back_button)
         box.add(self.forward_button)
         box.add(self.reload_button)
+        box.add(self.security)
 
         self.header_bar.pack_start(box)
 
@@ -114,15 +123,29 @@ class Prisma(Gtk.Window):
         self.window.add(self.scrolled_window)
 
     def connect_signals(self):
+        self.webview.connect('load_changed', self.on_load_changed)
+
         self.url_bar.connect('activate', self.on_activate)
+
+    def on_load_changed(self, data, web):
+        self.url_bar.set_text(self.webview.get_uri())
+        self.on_check_security()
+
+    def on_check_security(self):
+        if 'https' in self.webview.get_uri():
+            self.security.set_label('🔒  |  Secure')
+        else:
+            self.security.set_label('🔓  |  Unsecure')
 
     def on_activate(self, data):
         url = self.url_bar.get_text()
 
-        if url.find('http'):
-            if  self.default_url.find('google'):
+        self.on_check_security()
+
+        if 'http' in url and not 'https' in url:
+            if 'google' in self.default_url:
                 url = self.default_url + '/search?q=' + self.url_bar.get_text()
-            elif self.default_url.find('duckduckgo'):
+            elif 'duckduckgo' in self.default_url:
                 url = self.default_url + '?q='        + self.url_bar.get_text()
             else:
                 url = self.default_url + '/'          + self.url_bar.get_text()
