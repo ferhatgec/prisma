@@ -21,7 +21,7 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('WebKit2', '4.0')
 
 from gi.repository import Gtk, WebKit2
-
+from os import path
 
 class Prisma(Gtk.Window):
     title = 'Fegeya Prisma'
@@ -39,6 +39,8 @@ class Prisma(Gtk.Window):
     forward_button = Gtk.Button()
     reload_button = Gtk.Button()
 
+    logo = Gtk.Image()
+
     def __init__(self):
         self.window.connect('destroy', Gtk.main_quit)
 
@@ -47,6 +49,10 @@ class Prisma(Gtk.Window):
         self.header_bar.set_show_close_button(True)
 
         self.window.set_size_request(900, 600)
+
+        if path.exists('/usr/share/pixmaps/prism/prism_32.png'):
+            self.logo.set_from_file('/usr/share/pixmaps/prism/prism_32.png')
+            self.header_bar.pack_start(self.logo)
 
         self.initialize_widgets()
         self.connect_signals()
