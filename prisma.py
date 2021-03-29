@@ -163,7 +163,7 @@ class Prisma(Gtk.Window):
             else:
                 url = self.default_url + '/'          + self.url_bar.get_text()
         else:
-            url = self.url_bar.get_text()
+            url = self.default_protocol + self.url_bar.get_text()
 
         self.webview.load_uri(url)
 
