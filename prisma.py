@@ -117,7 +117,19 @@ class Prisma(Gtk.Window):
         self.url_bar.connect('activate', self.on_activate)
 
     def on_activate(self, data):
-        self.webview.load_uri(self.url_bar.get_text())
+        url = self.url_bar.get_text()
+
+        if url.find('http'):
+            if  self.default_url.find('google'):
+                url = self.default_url + '/search?q=' + self.url_bar.get_text()
+            elif self.default_url.find('duckduckgo'):
+                url = self.default_url + '?q='        + self.url_bar.get_text()
+            else:
+                url = self.default_url + '/'          + self.url_bar.get_text()
+        else:
+            url = self.url_bar.get_text()
+
+        self.webview.load_uri(url)
 
     def go_back(self, data):
         self.webview.go_back()
