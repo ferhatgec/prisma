@@ -130,6 +130,8 @@ class Prisma(Gtk.Window):
         self.forward_button.connect('clicked', self.go_forward)
         self.reload_button.connect('clicked', self.reload)
 
+        self.url_bar.set_icon_from_icon_name(Gtk.EntryIconPosition.PRIMARY, 'system-search-symbolic')
+
         box.add(self.home_button)
         box.add(self.url_bar)
         box.add(self.back_button)
