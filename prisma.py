@@ -53,10 +53,14 @@ class Prisma(Gtk.Window):
 
         self.window.set_size_request(900, 600)
 
-        if 'https' in self.default_url:
+        if path.exists('/usr/share/pixmaps/prism/homepage/index.html'):
+            self.default_url = 'file:///usr/share/pixmaps/prism/homepage/index.html'
+
+        if 'file:///'  in self.default_url:
+            self.security.set_label('🏠  |  Home')
+        elif 'https' in self.default_url:
             self.security.set_label('🔒  |  Home')
         else:
-            print('adasd')
             self.security.set_label('🔓  |  Home')
 
         self.initialize_widgets()
@@ -132,13 +136,22 @@ class Prisma(Gtk.Window):
         self.on_check_security()
 
     def on_check_security(self):
-        if 'https' in self.webview.get_uri():
+        if 'file:///'  in self.webview.get_uri():
+            self.security.set_label('🏠  |  Home')
+
+            if self.webview.get_uri() == self.default_url:
+                self.url_bar.set_text('prisma:home')
+        elif 'https' in self.webview.get_uri():
             self.security.set_label('🔒  |  Secure')
         else:
             self.security.set_label('🔓  |  Unsecure')
 
     def on_activate(self, data):
         url = self.url_bar.get_text()
+
+        if url == 'prisma:home':
+            self.webview.load_uri(self.default_url)
+            return
 
         self.on_check_security()
 

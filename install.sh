@@ -11,7 +11,11 @@ if ! [ -d "/usr/share/pixmaps/prism/" ]; then
   mkdir $HOME/.config/prism/
 fi
 
-sudo cp resource/*.png /usr/share/pixmaps/prism/
+sudo /bin/mkdir /usr/share/pixmaps/prism/homepage/
+
+sudo cp resources/homepage/* /usr/share/pixmaps/prism/homepage/
+
+sudo cp resources/*.png /usr/share/pixmaps/prism/
 
 sudo cp prisma.py /bin/prisma
 
