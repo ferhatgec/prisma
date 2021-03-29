@@ -35,11 +35,12 @@ class Prisma(Gtk.Window):
     scrolled_window = Gtk.ScrolledWindow()
     url_bar = Gtk.Entry()
 
-    back_button = Gtk.Button()
-    forward_button = Gtk.Button()
-    reload_button = Gtk.Button()
+    home_button = Gtk.ToolButton()
+    back_button = Gtk.ToolButton()
+    forward_button = Gtk.ToolButton()
+    reload_button = Gtk.ToolButton()
 
-    logo = Gtk.Image()
+    img = Gtk.Image()
 
     def __init__(self):
         self.window.connect('destroy', Gtk.main_quit)
@@ -50,10 +51,6 @@ class Prisma(Gtk.Window):
 
         self.window.set_size_request(900, 600)
 
-        if path.exists('/usr/share/pixmaps/prism/prism_32.png'):
-            self.logo.set_from_file('/usr/share/pixmaps/prism/prism_32.png')
-            self.header_bar.pack_start(self.logo)
-
         self.initialize_widgets()
         self.connect_signals()
 
@@ -62,17 +59,37 @@ class Prisma(Gtk.Window):
 
     def initialize_widgets(self):
         img = Gtk.Image()
-        img.set_from_icon_name('go-previous', Gtk.IconSize.SMALL_TOOLBAR)
-        self.back_button.set_image(img)
 
-        img = Gtk.Image()
-        img.set_from_icon_name('go-next', Gtk.IconSize.SMALL_TOOLBAR)
+        if path.exists('/usr/share/pixmaps/prism/prism_32.png'):
+            img.set_from_file('/usr/share/pixmaps/prism/prism_32.png')
 
-        self.forward_button.set_image(img)
+        self.home_button.set_icon_widget(img)
 
-        img = Gtk.Image()
-        img = img.set_from_icon_name('view-refresh', Gtk.IconSize.SMALL_TOOLBAR)
-        self.reload_button.set_image(img)
+        self.img = Gtk.Image()
+
+        if path.exists('/usr/share/pixmaps/prism/white_arrow_left.png'):
+            self.img.set_from_file('/usr/share/pixmaps/prism/white_arrow_left.png')
+
+        self.back_button.set_icon_widget(self.img)
+
+        self.img = Gtk.Image()
+
+        if path.exists('/usr/share/pixmaps/prism/white_arrow_right.png'):
+            self.img.set_from_file('/usr/share/pixmaps/prism/white_arrow_right.png')
+        else:
+            self.img.set_from_icon_name('go-next', Gtk.IconSize.SMALL_TOOLBAR)
+
+        self.forward_button.set_icon_widget(self.img)
+
+
+        self.img = Gtk.Image()
+
+        if path.exists('/usr/share/pixmaps/prism/white_refresh.png'):
+            self.img.set_from_file('/usr/share/pixmaps/prism/white_refresh.png')
+        else:
+            self.img.set_from_icon_name('view-refresh', Gtk.IconSize.SMALL_TOOLBAR)
+
+        self.reload_button.set_icon_widget(self.img)
 
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
 
@@ -84,6 +101,7 @@ class Prisma(Gtk.Window):
         self.forward_button.connect('clicked', self.go_forward)
         self.reload_button.connect('clicked', self.reload)
 
+        box.add(self.home_button)
         box.add(self.url_bar)
         box.add(self.back_button)
         box.add(self.forward_button)
