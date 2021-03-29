@@ -11,6 +11,10 @@ if ! [ -d "/usr/share/pixmaps/prism/" ]; then
   mkdir $HOME/.config/prism/
 fi
 
+if ! [ -D "~.config/prisma/" ]; then
+  mkdir ~.config/prisma/
+fi
+
 sudo /bin/mkdir /usr/share/pixmaps/prism/homepage/
 
 sudo cp resources/homepage/* /usr/share/pixmaps/prism/homepage/

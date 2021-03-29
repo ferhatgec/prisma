@@ -20,7 +20,8 @@ import gi
 gi.require_version('Gtk', '3.0')
 gi.require_version('WebKit2', '4.0')
 
-from gi.repository import Gtk, WebKit2
+from gi.repository import Gtk, WebKit2, Soup
+
 from os import path
 
 class Prisma(Gtk.Window):
@@ -30,6 +31,10 @@ class Prisma(Gtk.Window):
 
     window = Gtk.Window(title=title)
     webview = WebKit2.WebView()
+
+    cookie_context = ''
+    cookie_manager = ''
+
     header_bar = Gtk.HeaderBar()
 
     scrolled_window = Gtk.ScrolledWindow()
@@ -45,6 +50,8 @@ class Prisma(Gtk.Window):
     img = Gtk.Image()
 
     def __init__(self):
+        from pathlib import Path
+
         self.window.connect('destroy', Gtk.main_quit)
 
         self.header_bar.set_title(self.title)
@@ -52,6 +59,16 @@ class Prisma(Gtk.Window):
         self.header_bar.set_show_close_button(True)
 
         self.window.set_size_request(900, 600)
+
+        self.cookie_context = WebKit2.WebContext()
+
+        self.cookie_manager = WebKit2.WebContext.get_cookie_manager(self.cookie_context)
+
+        self.cookie_manager.set_accept_policy(WebKit2.CookieAcceptPolicy.ALWAYS)
+        self.cookie_manager.set_persistent_storage('{home_dir}/.config/prisma/prismacook.ies'.format(home_dir=Path.home()),
+                                            WebKit2.CookiePersistentStorage.TEXT)
+
+        self.webview = WebKit2.WebView.new_with_context(self.cookie_context)
 
         if path.exists('/usr/share/pixmaps/prism/homepage/index.html'):
             self.default_url = 'file:///usr/share/pixmaps/prism/homepage/index.html'
